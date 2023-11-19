@@ -1,0 +1,36 @@
+resources:
+- name: discord-bot
+  type: git
+  source:
+    uri: https://github.com/cluedtke/discord-bot-drink-water
+    private_key: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      ((github_token))
+      -----END OPENSSH PRIVATE KEY-----
+
+jobs:
+- name: deploy-bot
+  plan:
+  - get: discord-bot
+    trigger: true
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: node, tag: '14' }
+      inputs:
+      - name: discord-bot
+      run:
+        path: /bin/sh
+        args:
+        - -exc
+        - |
+          cd discord-bot
+          npm install
+          node bot.js
+    ensure:
+      put: discord-bot
+      params: { repository: discord-bot }
+    vars:
+      discord_bot_token: ((discord_bot_token))
