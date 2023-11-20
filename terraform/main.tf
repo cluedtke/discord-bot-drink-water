@@ -17,7 +17,7 @@ resource "aws_lambda_function" "discord_bot" {
 }
 
 resource "aws_iam_role" "discord_bot" {
-  name_prefix = "discord-bot-role"
+  name = "discord-bot-role"
 
   assume_role_policy = <<EOF
 {
