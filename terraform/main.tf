@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
 }
 
 resource "aws_lambda_function" "discord_bot" {
@@ -29,4 +29,18 @@ resource "aws_iam_role" "discord_bot" {
   ]
 }
 EOF
+}
+
+resource "aws_cloudwatch_event_rule" "schedule" {
+  name        = "discord-bot-schedule"
+  description = "Schedule for Discord Bot"
+
+  schedule_expression = "rate(1 minute)"
+}
+
+resource "aws_cloudwatch_event_target" "lambda" {
+  rule      = aws_cloudwatch_event_rule.schedule.name
+  target_id = "discord-bot-lambda"
+
+  arn = aws_lambda_function.discord_bot.arn
 }
