@@ -10,6 +10,10 @@ resource "aws_lambda_function" "discord_bot" {
   runtime       = "nodejs18.x"
 
   source_code_hash = filebase64("discord-bot.zip")
+
+  tracing_config {
+    mode = "PassThrough"
+  }
 }
 
 resource "aws_iam_role" "discord_bot" {
@@ -43,4 +47,10 @@ resource "aws_cloudwatch_event_target" "lambda" {
   target_id = "discord-bot-lambda"
 
   arn = aws_lambda_function.discord_bot.arn
+}
+
+resource "aws_cloudwatch_log_group" "logs" {
+  name = "/aws/lambda/${aws_lambda_function.api.function_name}"
+
+  retention_in_days = 30
 }
