@@ -9,7 +9,7 @@ resource "aws_lambda_function" "discord_bot" {
   handler       = "bot.handler"
   runtime       = "nodejs18.x"
 
-  source_code_hash = filebase64("../discord-bot.zip")
+  source_code_hash = filebase64("discord-bot.zip")
 }
 
 resource "aws_iam_role" "discord_bot" {
