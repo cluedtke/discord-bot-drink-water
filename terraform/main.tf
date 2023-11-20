@@ -1,6 +1,5 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "free"
 }
 
 resource "aws_lambda_function" "discord_bot" {
