@@ -58,6 +58,13 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+# CloudWatch Logs
+resource "aws_cloudwatch_log_group" "logs" {
+  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
+
+  retention_in_days = 30
+}
+
 # Lambda Trigger
 resource "aws_cloudwatch_event_rule" "cron_schedule" {
   name        = "${local.app}-schedule"
@@ -79,36 +86,4 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
   function_name = aws_lambda_function.lambda.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.cron_schedule.arn
-}
-
-# CloudWatch Logs
-resource "aws_cloudwatch_log_group" "logs" {
-  name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
-
-  retention_in_days = 30
-}
-
-# Lambda IAM Role
-resource "aws_iam_role" "discord_bot_role" {
-  name = "discord-bot-role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      }
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy_attachment" "discord_bot_policy" {
-  role       = aws_iam_role.discord_bot_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
