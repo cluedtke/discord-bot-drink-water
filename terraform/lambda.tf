@@ -8,7 +8,7 @@ resource "null_resource" "ci_build" {
     command = join(" && ", [
       "rm -rf ${path.module}/../ci",
       "mkdir ${path.module}/../ci",
-      "cp -R {${path.module}/../lambda.mjs,${path.module}/../node_modules} ${path.module}/../ci",
+      "cp ${path.module}/../lambda.mjs ${path.module}/../node_modules -r ${path.module}/../ci/",
     ])
   }
 }
