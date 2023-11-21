@@ -1,11 +1,17 @@
 # discord-bot-drink-water
 
+A discord bot that reminds me to drink water. CI/CD enabled via Concourse CI.
+
 ## Credentails File
 
 ```sh
-echo discord_bot_token: {{placeholder}} >> credentials.yml
+echo discord_bot_token: {{placeholder}} > credentials.yml
 echo github_apikey: {{placeholder}} >> credentials.yml
+echo aws_access_key_id: {{placeholder}} >> credentials.yml
+echo aws_secret_access_key: {{placeholder}} >> credentials.yml
 ```
+
+## Concourse CI/CD
 
 ```sh
 # 1 Run docker-compose
