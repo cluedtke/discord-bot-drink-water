@@ -10,15 +10,17 @@ jobs:
   plan:
   - get: discord-bot
     trigger: true
-  - task: deploy
+  - task: build
     config:
       platform: linux
       image_resource:
         type: registry-image
-        source: { repository: node, tag: '16' }
+        source: { repository: node, tag: '18' }
       params:
         DISCORD_BOT_TOKEN: ((discord_bot_token))
       inputs:
+      - name: discord-bot
+      outputs:
       - name: discord-bot
       run:
         path: /bin/sh
@@ -28,7 +30,23 @@ jobs:
           cd discord-bot
           npm cache clean --force
           npm install
-          node bot.js
-    ensure:
-      put: discord-bot
-      params: { repository: discord-bot }
+  - task: terraform
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: hashicorp/terraform, tag: 'latest' }
+      params:
+        AWS_ACCESS_KEY_ID: ((aws_access_key_id))
+        AWS_SECRET_ACCESS_KEY: ((aws_secret_access_key))
+        TF_VAR_discord_bot_token: ((discord_bot_token))
+      inputs:
+      - name: discord-bot
+      run:
+        path: /bin/sh
+        args:
+        - -exc
+        - |
+          cd discord-bot/terraform
+          terraform init
+          terraform apply -auto-approve
