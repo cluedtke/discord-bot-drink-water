@@ -1,6 +1,7 @@
 # Terraform
 .terraform
 .terraform.lock.hcl
+terraform.tfstate.backup
 
 # Node
 node_modules
@@ -9,6 +10,10 @@ package-lock.json
 # Secrets
 credentials.yml
 .env
+
+# CI
+ci
+lambda.zip
 
 # Other
 .DS_Store

@@ -9,4 +9,5 @@ locals {
 variable "discord_bot_token" {
   description = "Discord token for the bot"
   default     = "default_value"
+  sensitive   = true
 }

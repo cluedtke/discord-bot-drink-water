@@ -6,10 +6,11 @@ resource "null_resource" "ci_build" {
 
   provisioner "local-exec" {
     command = join(" && ", [
-      "rm -rf ${path.module}/../ci",
-      "mkdir ${path.module}/../ci",
-      "cp ${path.module}/../lambda.mjs ${path.module}/../node_modules -r ${path.module}/../ci/",
+      "rm -rf ci",
+      "mkdir ci",
+      "cp lambda.mjs node_modules -r ci/",
     ])
+    working_dir = "${path.module}/../"
   }
 }
 
@@ -49,7 +50,7 @@ resource "aws_lambda_function" "lambda" {
 
   environment {
     variables = {
-      DISCORD_BOT_TOKEN = var.discord_bot_token
+      DISCORD_BOT_TOKEN = sensitive(var.discord_bot_token)
     }
   }
 
